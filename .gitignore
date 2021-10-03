@@ -141,3 +141,5 @@ cython_debug/
 # From amarasaman
 wheels/
 .vscode/
+first/
+second/
