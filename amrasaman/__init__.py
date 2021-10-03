@@ -49,7 +49,7 @@ def build_sources(tmpdir: str):
     "Builds reproducible wheels from temporary extract source files"
     project_names = os.listdir(WHEEL_BUILD_DIR)
     for project in project_names:
-        print(f"Building {project}")
+        click.echo(f"{project}")
         source_path = os.path.join(WHEEL_BUILD_DIR, project)
         cmd = [
             "python3",
@@ -62,7 +62,7 @@ def build_sources(tmpdir: str):
             tmpdir,
         ]
         subprocess.check_call(cmd)
-        print(f"build command used: {' '.join(cmd)}")
+        click.echo()(f"build command used: {' '.join(cmd)}")
 
 
 def copy_wheels(tmpdir: str, output: str):
