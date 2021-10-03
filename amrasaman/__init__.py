@@ -9,7 +9,7 @@ import click
 
 # Variables for various operations
 
-# To remember the day Aaron Swartz made the first commit
+# To remember the time Aaron Swartz made the first commit
 # to SecureDrop project.
 os.environ["SOURCE_DATE_EPOCH"] = "1309379017"
 
