@@ -21,6 +21,7 @@ os.umask(0o022)
 WHEEL_BUILD_DIR = "/tmp/pip-wheel-build"
 
 
+# TODO: This is not showing the command name in the help message.
 def show_help(command):
     with click.Context(command) as ctx:
         click.echo(command.get_help(ctx))
@@ -91,7 +92,7 @@ def find_and_extract_sources(directory: str):
     extract_sources(tarsources=tarsources, zipsources=zipsources)
 
 
-@click.command()
+@click.command(name="asaman")
 @click.option(
     "-s",
     "--source",
