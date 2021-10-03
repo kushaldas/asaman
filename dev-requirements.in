@@ -1,0 +1,5 @@
+
+pip-tools >= 6.3.0
+
+# For pip-tools
+setuptools_scm >=5.0.3
