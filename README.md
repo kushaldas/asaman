@@ -13,7 +13,7 @@ A few different positive points:
 ## How to install?
 
 ```bash
-python3 -m pip install amrasaman
+python3 -m pip install asaman
 ```
 
 ## How to build reproducible wheels?
