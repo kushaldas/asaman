@@ -1,9 +1,9 @@
-import os
-import sys
 import glob
+import os
 import shutil
-import tempfile
 import subprocess
+import sys
+import tempfile
 
 import click
 
@@ -92,14 +92,33 @@ def find_and_extract_sources(directory: str):
     extract_sources(tarsources=tarsources, zipsources=zipsources)
 
 
-@click.command(name="asaman")
+def download_sources(requirements: str, output: str):
+    "Downloads all sources from a given requirements file."
+    click.echo("Downloading sources using the requirements file.")
+    cmd = [
+        "python3",
+        "-m",
+        "pip",
+        "download",
+        "--no-binary",
+        ":all:",
+        "--require-hashes",
+        "--dest",
+        output,
+        "--requirement",
+        requirements,
+    ]
+    subprocess.check_call(cmd)
+
+
+@click.command(name="asaman", help="Tool to build reproducible wheels.")
 @click.option(
     "-s",
     "--source",
     type=click.Path(
         exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
     ),
-    help="A source tarball or zip file.",
+    help="A single source tarball or zip file.",
 )
 @click.option(
     "-d",
@@ -116,8 +135,16 @@ def find_and_extract_sources(directory: str):
     default="./wheels",
     help="The output directory to store all wheel files. Default: ./wheels",
 )
-def cli(source: str, directory: str, output: str):
-    if not any([source, directory]):
+@click.option(
+    "-r",
+    "--requirement",
+    type=click.Path(
+        exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
+    ),
+    help="Path to the requirement.txt file which contains all packages to build along with hashes.",
+)
+def cli(source: str, directory: str, output: str, requirement: str):
+    if not any([source, directory, requirement]):
         show_help(cli)
         sys.exit(1)
 
@@ -143,6 +170,12 @@ def cli(source: str, directory: str, output: str):
         find_and_extract_sources(directory)
 
     with tempfile.TemporaryDirectory() as tmpdir:
+        # Check if we have a requirements file, then download the sources first
+        if requirement:
+            download_sources(requirement, tmpdir)
+            find_and_extract_sources(tmpdir)
         # Time to build the wheels.
         build_sources(tmpdir)
         copy_wheels(tmpdir, output)
+        # All done for now
+        click.echo(f"All wheels can be found at {output}")
