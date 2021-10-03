@@ -143,11 +143,14 @@ def download_sources(requirements: str, output: str):
     ),
     help="Path to the requirement.txt file which contains all packages to build along with hashes.",
 )
-def cli(source: str, directory: str, output: str, requirement: str):
+@click.option("--sde", type=click.STRING, help="Custom SOURCE_DATE_EPOCH value.")
+def cli(source: str, directory: str, output: str, requirement: str, sde: str):
     if not any([source, directory, requirement]):
         show_help(cli)
         sys.exit(1)
 
+    if sde:
+        os.environ["SOURCE_DATE_EPOCH"] = sde
     # First let us create the temporary directories
     create_temp_dirs()
     if source:
