@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="amrasaman",
-    version="0.1.1",
+    version="0.1.5",
     author="Kushal Das",
     author_email="mail@kushaldas.in",
     description="A tool to build reproducible wheels.",
@@ -18,9 +18,12 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    py_modules=["amrasaman"],
+    packages=find_packages(),
     install_requires=[
         "Click",
+        "pep517",
+        "build",
+        "setuptools",
     ],
     entry_points={
         "console_scripts": [
