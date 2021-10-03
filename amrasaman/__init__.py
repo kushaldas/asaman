@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import shutil
 import tempfile
 import subprocess
@@ -62,7 +63,7 @@ def build_sources(tmpdir: str):
             tmpdir,
         ]
         subprocess.check_call(cmd)
-        click.echo()(f"build command used: {' '.join(cmd)}")
+        click.echo(f"build command used: {' '.join(cmd)}")
 
 
 def copy_wheels(tmpdir: str, output: str):
@@ -82,6 +83,14 @@ def copy_wheels(tmpdir: str, output: str):
         shutil.copy(filepath, output, follow_symlinks=True)
 
 
+def find_and_extract_sources(directory: str):
+    "Finds all the source files from a given directory and extracts them."
+
+    tarsources = glob.glob(f"{directory}/*.tar.gz")
+    zipsources = glob.glob(f"{directory}/*.zip")
+    extract_sources(tarsources=tarsources, zipsources=zipsources)
+
+
 @click.command()
 @click.option(
     "-s",
@@ -92,18 +101,22 @@ def copy_wheels(tmpdir: str, output: str):
     help="A source tarball or zip file.",
 )
 @click.option(
+    "-d",
+    "--directory",
+    type=click.Path(
+        exists=True, file_okay=False, dir_okay=True, readable=True, resolve_path=True
+    ),
+    help="A directory containing all source tarballs and zips.",
+)
+@click.option(
     "-o",
     "--output",
     type=click.Path(exists=False, file_okay=False, dir_okay=True),
     default="./wheels",
     help="The output directory to store all wheel files. Default: ./wheels",
 )
-def cli(source: str, output: str):
-    if not any(
-        [
-            source,
-        ]
-    ):
+def cli(source: str, directory: str, output: str):
+    if not any([source, directory]):
         show_help(cli)
         sys.exit(1)
 
@@ -125,6 +138,8 @@ def cli(source: str, output: str):
         else:
             click.echo("Unknown source format.")
             sys.exit(1)
+    if directory:
+        find_and_extract_sources(directory)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         # Time to build the wheels.
