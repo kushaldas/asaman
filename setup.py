@@ -27,8 +27,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "asaman = amrasaman:cli",
-            "asaman-generate = amrasaman:generate",
+            "asaman = asaman:cli",
+            "asaman-generate = asaman:generate",
         ],
     },
 )
