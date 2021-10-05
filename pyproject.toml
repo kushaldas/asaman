@@ -12,7 +12,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 requires-python = ">=3.6"
-dynamic = ['version', 'description']
+dynamic = ["version", "description"]
 dependencies = [
     "wheel",
     "build>=0.7.0",
