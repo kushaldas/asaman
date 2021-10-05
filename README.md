@@ -1,6 +1,6 @@
 ## asaman: Amra Saman
 
-This is a tool to build reproducible wheels for you Python project or for all of your dependencies. Means, if you use the same Operating System version and similar system level dependencies, you will always get the same wheel generated. Thus enabling us to have a bit more protection from side-channel attacks. Any user of the wheels can verify that they are using the correct build from the exact source via verifying the builds themselves.
+This is a tool to build reproducible wheels for your Python project or for all of your dependencies. Means, if you use the same Operating System version and similar system level dependencies, you will always get the same wheel generated. Thus enabling us to have a bit more protection from side-channel attacks. Any user of the wheels can verify that they are using the correct build from the exact source by verifying the builds themselves.
 
 ## Why do we need a reproducible wheel?
 
@@ -135,7 +135,7 @@ asaman -r bootstrap.txt
 ```
 
 This will create all the wheels in the `./wheels` directory.
-From next time, one can install them from the `./wheels` directory directory.
+From next time, one can install them from the `./wheels` directory.
 
 But, first we will create a new requirements file with only the hashes from our reproducible wheels, the output file name will be `verified-bootstrap.txt`.
 
