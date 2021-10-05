@@ -1,8 +1,0 @@
-include LICENSE
-include requirements.*
-include dev-requirements.*
-include setup.py
-
-recursive-include amrasaman *
-
-recursive-exclude amrasaman *.pyc
