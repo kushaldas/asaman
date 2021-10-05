@@ -1,4 +1,4 @@
-# asaman: Amra Saman
+# asaman: Amra Saman (আমরা সমান)
 
 This is a tool to build reproducible wheels for your Python project or for all of your dependencies. What this means is if you use the same Operating System version and similar system level dependencies, you will always get the same wheel generated. This enables us to have a bit more protection from side-channel attacks. Any user of the wheels can verify that they are using the correct build from the exact source via verifying the builds themselves.
 
@@ -148,7 +148,7 @@ python3 -m pip install --no-index --find-links ./wheels --require-hashes --only-
 ```
 
 
+## Meaning of the name
 
-
-
+In Bengali it means "we are same"
 
