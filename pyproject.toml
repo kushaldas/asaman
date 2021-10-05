@@ -1,9 +1,34 @@
 [build-system]
-requires = [
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "asaman"
+authors = [
+    {name = "Kushal Das", email = "mail@kushaldas.in"},
+]
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
+requires-python = ">=3.6"
+dynamic = ['version', 'description']
+dependencies = [
     "wheel",
     "build>=0.7.0",
     "click",
     "pep517",
     "setuptools",
 ]
-build-backend = "setuptools.build_meta"
+
+[project.urls]
+Documentation = "https://asaman.readthedocs.io/en/latest/"
+Source = "https://github.com/kushaldas/asaman"
+
+[project.scripts]
+asaman = "asaman:cli"
+asaman-generate = "asaman:generate"
+
+[tool.flit.sdist]
+include = ["LICENSE", "dev-requirements.*", "requirements.*", "README.md"]
+exclude = [".gitignore"]

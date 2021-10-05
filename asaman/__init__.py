@@ -1,3 +1,7 @@
+"A tool to create reproducible wheels"
+
+__version__ = "0.1.7"
+
 import glob
 import os
 import shutil
