@@ -6,6 +6,8 @@
 Welcome to asaman's documentation!
 ==================================
 
+**আমরা সমান: We are same**. A tool to create reproducible wheels for Python packages. 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
