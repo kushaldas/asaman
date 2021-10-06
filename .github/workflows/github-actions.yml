@@ -1,7 +1,7 @@
-name: GitHub Actions Demo
-on: [push]
+name: Unit tests for asaman
+on: [pull_request]
 jobs:
-  Explore-GitHub-Actions:
+  Run-Unit-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
