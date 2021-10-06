@@ -152,3 +152,7 @@ python3 -m pip install --no-index --find-links ./wheels --require-hashes --only-
 
 In Bengali it means "we are same"
 
+## Developer documentation
+
+Read the [hacking guide](https://asaman.readthedocs.io/en/latest/hacking.html).
+
