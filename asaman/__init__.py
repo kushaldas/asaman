@@ -21,8 +21,7 @@ os.environ["SOURCE_DATE_EPOCH"] = "1309379017"
 os.umask(0o022)
 
 # The build directory value
-# TODO: This should be updated based on Windows or Linux
-WHEEL_BUILD_DIR = "/tmp/pip-wheel-build"
+WHEEL_BUILD_DIR = os.path.join(tempfile.gettempdir(), "pip-wheel-build")
 
 
 # TODO: This is not showing the command name in the help message.
