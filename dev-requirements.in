@@ -4,3 +4,6 @@ flit >= 3.3.0
 
 # For pip-tools
 setuptools_scm >=5.0.3
+
+# For testing
+pytest
