@@ -7,7 +7,6 @@ Create a virtual environment and install all the dependencies there.
 
     python3 -m venv .venv
     source .venv/bin/activate
-    python3 -m pip install
     python3 -m pip install --require-hashes -r requirements.txt 
     python3 -m pip install --require-hashes -r dev-requirements.txt 
     flit install -s
