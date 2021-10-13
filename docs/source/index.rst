@@ -13,6 +13,7 @@ Welcome to asaman's documentation!
    :caption: Contents:
 
    install
+   usage
    hacking
 
 Indices and tables
