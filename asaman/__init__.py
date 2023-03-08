@@ -1,6 +1,6 @@
 "A tool to create reproducible wheels"
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 import glob
 import os
@@ -51,9 +51,13 @@ def extract_sources(tarsources=[], zipsources=[]):
         subprocess.check_call(cmd)
 
 
-def build_sources(tmpdir: str):
+def build_sources(tmpdir: str, with_index: str = "", trusted_host: str = ""):
     "Builds reproducible wheels from temporary extract source files"
     project_names = os.listdir(WHEEL_BUILD_DIR)
+    if with_index:
+        # Set the index value for PIP
+        os.environ["PIP_INDEX_URL"] = with_index
+        print(f"Seting PIP_INDEX_URL={with_index}")
     for project in project_names:
         click.echo(f"{project}")
         source_path = os.path.join(WHEEL_BUILD_DIR, project)
@@ -63,16 +67,29 @@ def build_sources(tmpdir: str):
             "build",
             "--wheel",
             source_path,
-            "--no-isolation",
             "-o",
             tmpdir,
         ]
+        # Normally we build without isolation
+        # This means we have to handle all build dependencies,
+        # unless we pass an index.
+        if not with_index:
+            cmd.append("--no-isolation")
+
+        # We want to trust the PIP_INDEX_URL (in case of without HTTPS)
+        if trusted_host:
+            cmd.append(f"--config-setting=--trusted-host={trusted_host}")
+            os.environ["PIP_TRUSTED_HOST"] = trusted_host
+            print(f"Setting PIP_TRUSTED_HOST={trusted_host}")
+        # Execute the build command
         subprocess.check_call(cmd)
         click.echo(f"build command used: {' '.join(cmd)}")
+    # All done, unset the URL
+    os.environ["PIP_INDEX_URL"] = ""
 
 
-def copy_wheels(tmpdir: str, output: str):
-    "Copies the freshly built wheels to a dirctory"
+def copy_files(tmpdir: str, output: str, keep_sources: bool):
+    "Copies the freshly built wheels or sources to a dirctory"
 
     # If the output directory does not exists then create
     if not os.path.exists(output):
@@ -81,9 +98,10 @@ def copy_wheels(tmpdir: str, output: str):
     # First find all the wheels
     names = os.listdir(tmpdir)
     for name in names:
-        if not name.endswith(".whl"):
-            # we want only wheel files
-            continue
+        if not keep_sources:
+            if not name.endswith(".whl"):
+                # we want only wheel files
+                continue
         filepath = os.path.join(tmpdir, name)
         shutil.copy(filepath, output, follow_symlinks=True)
 
@@ -96,7 +114,7 @@ def find_and_extract_sources(directory: str):
     extract_sources(tarsources=tarsources, zipsources=zipsources)
 
 
-def download_sources(requirements: str, output: str):
+def download_sources(requirements: str, output: str, no_hash=False):
     "Downloads all sources from a given requirements file."
     click.echo("Downloading sources using the requirements file.")
     cmd = [
@@ -106,12 +124,19 @@ def download_sources(requirements: str, output: str):
         "download",
         "--no-binary",
         ":all:",
-        "--require-hashes",
-        "--dest",
-        output,
-        "--requirement",
-        requirements,
     ]
+    if not no_hash:
+        cmd.append("--require-hashes")
+    cmd.append("--no-deps")
+    cmd.extend(
+        [
+            "--dest",
+            output,
+            "--requirement",
+            requirements,
+        ]
+    )
+    print(cmd)
     subprocess.check_call(cmd)
 
 
@@ -148,7 +173,43 @@ def download_sources(requirements: str, output: str):
     help="Path to the requirement.txt file which contains all packages to build along with hashes.",
 )
 @click.option("--sde", type=click.STRING, help="Custom SOURCE_DATE_EPOCH value.")
-def cli(source: str, directory: str, output: str, requirement: str, sde: str):
+@click.option(
+    "--no-hash",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="DO NOT USE UNLESS VERY SURE: In case we skip hash checking for download.",
+)
+@click.option(
+    "--keep-sources",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Copy over the sources to output directory",
+)
+@click.option(
+    "--with-index",
+    show_default=True,
+    default="",
+    help="In case you want to install build time dependencies from an index, pass the URL.",
+)
+@click.option(
+    "--trusted-host",
+    show_default=True,
+    default="",
+    help="Pass --trusted-host VALUE to pip, helps in local indexes over HTTP. Pass the correct hostname.",
+)
+def cli(
+    source: str,
+    directory: str,
+    output: str,
+    requirement: str,
+    sde: str,
+    no_hash: bool,
+    keep_sources: bool,
+    with_index: str,
+    trusted_host: str,
+):
     if not any([source, directory, requirement]):
         show_help(cli)
         sys.exit(1)
@@ -179,11 +240,11 @@ def cli(source: str, directory: str, output: str, requirement: str, sde: str):
     with tempfile.TemporaryDirectory() as tmpdir:
         # Check if we have a requirements file, then download the sources first
         if requirement:
-            download_sources(requirement, tmpdir)
+            download_sources(requirement, tmpdir, no_hash)
             find_and_extract_sources(tmpdir)
         # Time to build the wheels.
-        build_sources(tmpdir)
-        copy_wheels(tmpdir, output)
+        build_sources(tmpdir, with_index=with_index, trusted_host=trusted_host)
+        copy_files(tmpdir, output, keep_sources)
         # All done for now
         click.echo(f"All wheels can be found at {output}")
 
