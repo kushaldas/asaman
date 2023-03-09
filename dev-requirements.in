@@ -2,6 +2,9 @@
 pip-tools >= 6.3.0
 flit >= 3.3.0
 
+# Dear tomli
+tomli
+
 # For pip-tools
 setuptools_scm >=5.0.3
 
