@@ -1,7 +1,14 @@
 Usage
 ======
 
-`asaman` can be used in various ways, the simplest form would be to create a reproducible wheel for your own project, via a source tarball.
+`asaman` can be used in various ways, the simplest form would be to create a
+reproducible wheel for your own project, via a source tarball.
+
+To achive this, the project uses a `SOURCE_DATE_EPOCH` value as `1309379017`,
+this time has been chosen to remember `Aaron Swartz <https://en.wikipedia.org/wiki/Aaron_Swartz>`_,
+his first commit to the SecureDrop project.
+
+We also use `/tmp/pip-wheel-build/` directory to build the wheels.
 
 Creating wheel from a source tarball
 -------------------------------------
@@ -14,6 +21,12 @@ This comamnd will create a wheel and copy it to the `./wheels` directory.
 
 .. note:: Please remember to install all the build dependencies before hand in the virtualenvironment.
 
+In case you just started bootstrapping your build environment (or want to use a
+specific Index to download the dependencies), you can use `--with-index` argument,
+If you are using a local index on HTTP only, pass on the hostname via
+`--trusted-host` command line argument.
+
+
 Creating wheels from the requirements file
 ------------------------------------------
 
@@ -23,6 +36,7 @@ Creating wheels from the requirements file
 
 .. warning:: You will need hashes for every dependencies in the requirements file. You can create that via `pip-tools` project. Read more below.
 
+If you want to keep the source packages too, pass `--keep-sources` flag in the command line.
 
 Creating requirements.txt file with hashes
 ------------------------------------------
@@ -84,3 +98,7 @@ reproducible wheels. You can pass the `-o`/`--output` option to pass your custom
                               file.
       --help                  Show this message and exit.
 
+
+.. warning:: The following should only be done if you know exactly what you are doing.
+
+One can even pass `--no-hash` option to not verify the hashes of the packages while downloading.
