@@ -34,6 +34,16 @@ Options:
   -r, --requirement FILE     Path to the requirement.txt file which contains
                              all packages to build along with hashes.
   --sde TEXT                 Custom SOURCE_DATE_EPOCH value.
+  --no-hash                  DO NOT USE UNLESS VERY SURE: In case we skip hash
+                             checking for download.  [default: False]
+  --keep-sources             Copy over the sources to output directory
+                             [default: False]
+  --with-index TEXT          In case you want to install build time
+                             dependencies from an index, pass the URL.
+                             [default: ]
+  --trusted-host TEXT        Pass --trusted-host VALUE to pip, helps in local
+                             indexes over HTTP. Pass the correct hostname.
+                             [default: ]
   --help                     Show this message and exit.
 ```
 
