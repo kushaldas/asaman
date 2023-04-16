@@ -44,6 +44,8 @@ Options:
   --trusted-host TEXT        Pass --trusted-host VALUE to pip, helps in local
                              indexes over HTTP. Pass the correct hostname.
                              [default: ]
+  --skip-build-deps          While downloading the sources, skip downloading
+                             the build dependencies as source  [default: True]
   --help                     Show this message and exit.
 ```
 

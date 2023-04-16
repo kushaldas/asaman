@@ -27,12 +27,17 @@ iniconfig==2.0.0
 packaging==23.0
     # via
     #   build
+    #   pip-requirements-parser
     #   pytest
     #   setuptools-scm
+pip-requirements-parser==32.0.1
+    # via -r dev-requirements.in
 pip-tools==6.12.3
     # via -r dev-requirements.in
 pluggy==1.0.0
     # via pytest
+pyparsing==3.0.9
+    # via pip-requirements-parser
 pyproject-hooks==1.0.0
     # via build
 pytest==7.2.2
