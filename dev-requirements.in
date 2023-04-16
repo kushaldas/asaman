@@ -10,3 +10,7 @@ setuptools_scm >=5.0.3
 
 # For testing
 pytest
+
+# For parsing requirement files
+pip-requirements-parser
+
