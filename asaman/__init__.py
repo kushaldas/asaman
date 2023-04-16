@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from pip_requirements_parser import RequirementsFile
 
 import click
 
@@ -114,7 +115,7 @@ def find_and_extract_sources(directory: str):
     extract_sources(tarsources=tarsources, zipsources=zipsources)
 
 
-def download_sources(requirements: str, output: str, no_hash=False):
+def download_sources(requirements: str, output: str, no_hash=False, skip_build_deps=True):
     "Downloads all sources from a given requirements file."
     click.echo("Downloading sources using the requirements file.")
     cmd = [
@@ -122,9 +123,18 @@ def download_sources(requirements: str, output: str, no_hash=False):
         "-m",
         "pip",
         "download",
-        "--no-binary",
-        ":all:",
     ]
+    if not skip_build_deps:
+        cmd.append("--no-binary")
+        cmd.append(":all:")
+    else:
+        # Here we find all the actual package names and add them to no binary list
+        rf = RequirementsFile.from_file(requirements)
+        data = rf.to_dict()
+        for req in data["requirements"]:
+            cmd.append("--no-binary")
+            cmd.append(f"{req['name']}")
+
     if not no_hash:
         cmd.append("--require-hashes")
     cmd.append("--no-deps")
@@ -199,6 +209,13 @@ def download_sources(requirements: str, output: str, no_hash=False):
     default="",
     help="Pass --trusted-host VALUE to pip, helps in local indexes over HTTP. Pass the correct hostname.",
 )
+@click.option(
+    "--skip-build-deps",
+    is_flag=True,
+    show_default=True,
+    default=True,
+    help="While downloading the sources, skip downloading the build dependencies as source",
+)
 def cli(
     source: str,
     directory: str,
@@ -209,6 +226,7 @@ def cli(
     keep_sources: bool,
     with_index: str,
     trusted_host: str,
+    skip_build_deps: bool,
 ):
     if not any([source, directory, requirement]):
         show_help(cli)
@@ -240,7 +258,7 @@ def cli(
     with tempfile.TemporaryDirectory() as tmpdir:
         # Check if we have a requirements file, then download the sources first
         if requirement:
-            download_sources(requirement, tmpdir, no_hash)
+            download_sources(requirement, tmpdir, no_hash, skip_build_deps)
             find_and_extract_sources(tmpdir)
         # Time to build the wheels.
         build_sources(tmpdir, with_index=with_index, trusted_host=trusted_host)
