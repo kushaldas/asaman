@@ -6,9 +6,39 @@ reproducible wheel for your own project, via a source tarball.
 
 To achive this, the project uses a `SOURCE_DATE_EPOCH` value as `1309379017`,
 this time has been chosen to remember `Aaron Swartz <https://en.wikipedia.org/wiki/Aaron_Swartz>`_,
-his first commit to the SecureDrop project.
+his first commit to the SecureDrop project. You can pass a different value as an argument to `--sde`.
 
 We also use `/tmp/pip-wheel-build/` directory to build the wheels.
+
+Command line options
+---------------------
+
+::
+
+    Usage: asaman [OPTIONS]
+
+      Tool to build reproducible wheels.
+
+    Options:
+      -s, --source FILE          A single source tarball or zip file.
+      -d, --directory DIRECTORY  A directory containing all source tarballs and
+                                 zips.
+      -o, --output DIRECTORY     The output directory to store all wheel files.
+                                 Default: ./wheels
+      -r, --requirement FILE     Path to the requirement.txt file which contains
+                                 all packages to build along with hashes.
+      --sde TEXT                 Custom SOURCE_DATE_EPOCH value.
+      --no-hash                  DO NOT USE UNLESS VERY SURE: In case we skip hash
+                                 checking for download.
+      --keep-sources             Copy over the sources to output directory
+      --with-index TEXT          In case you want to install build time
+                                 dependencies from an index, pass the URL.
+      --trusted-host TEXT        Pass --trusted-host VALUE to pip, helps in local
+                                 indexes over HTTP. Pass the correct hostname.
+      --skip-build-deps          While downloading the sources, skip downloading
+                                 the build dependencies as source  [default: True]
+      --help                     Show this message and exit.
+
 
 Creating wheel from a source tarball
 -------------------------------------

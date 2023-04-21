@@ -19,6 +19,7 @@ dependencies = [
     "click",
     "pep517",
     "setuptools",
+    "pip-requirements-parser",
 ]
 
 [project.urls]
