@@ -63,7 +63,7 @@ def build_sources(tmpdir: str, with_index: str = "", trusted_host: str = ""):
         click.echo(f"{project}")
         source_path = os.path.join(WHEEL_BUILD_DIR, project)
         cmd = [
-            "python3",
+            sys.executable,
             "-m",
             "build",
             "--wheel",
@@ -119,7 +119,7 @@ def download_sources(requirements: str, output: str, no_hash=False, skip_build_d
     "Downloads all sources from a given requirements file."
     click.echo("Downloading sources using the requirements file.")
     cmd = [
-        "python3",
+        sys.executable,
         "-m",
         "pip",
         "download",
